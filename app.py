@@ -8,6 +8,7 @@ from flask_cors import CORS
 from routes.auth_routes import auth_bp
 from routes.general_routers import general_bp
 from routes.modules_router import modules_bp
+from routes.users_routes import users_bp
 
 
 
@@ -23,6 +24,7 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(general_bp)
     app.register_blueprint(modules_bp)
+    app.register_blueprint(users_bp)
 
     return app
 

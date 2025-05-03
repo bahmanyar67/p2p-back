@@ -20,3 +20,7 @@ def protected():
 @general_bp.route('/avatars/<filename>')
 def get_avatar(filename):
     return send_from_directory(os.path.join(os.getcwd(), 'static/avatars'), filename)
+
+@general_bp.route('/static/modules/<path:filename>')
+def get_static_modules(filename):
+    return send_from_directory(os.path.join(os.getcwd(), 'static/modules'), filename)

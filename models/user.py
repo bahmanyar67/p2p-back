@@ -21,7 +21,10 @@ class User(db.Model):
     skills = db.relationship('Module', secondary=user_skills, backref='users')
     rate = db.Column(db.Float, default=0)
     bio = db.Column(db.Text)
-    availability = db.Column(db.JSON)  # Store availability as a JSON array
+    availability = db.Column(db.JSON, default={})
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, server_default=db.func.now(), onupdate=db.func.now())
+
 
     def to_dict(self):
         """Helper method to serialize user easily"""
@@ -33,8 +36,10 @@ class User(db.Model):
             "subject": self.subject,
             "avatar": self.avatar if self.avatar else "avatars/user.png",
             "is_tutor": self.is_tutor,
-            "skills": self.skills,
+            "skills": [skill.slug for skill in self.skills],  # Serialize skills as a list of slugs
             "rate": self.rate,
             "bio": self.bio,
-            "availability": self.availability
+            "availability": list(self.availability),
+            "created_at": self.created_at,
+            "updated_at": self.updated_at
         }

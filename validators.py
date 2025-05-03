@@ -9,7 +9,10 @@ class Validator:
         "email": "Invalid email format.",
         "min": "This {field} must have at least {min_length} characters.",
         "max": "This {field} must have at most {max_length} characters.",
-        "password": "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character."
+        "password": "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.",
+        "string": "This {field} must contain only letters.",
+        "number": "This {field} must be a number.",
+        "boolean": "This {field} must be a boolean value.",
     }
 
     @staticmethod
@@ -43,8 +46,27 @@ class Validator:
         return bool(re.match(r"[^@]+@[^@]+\.[^@]+", value))
 
     @staticmethod
+    def validate_number(value):
+        return str(value).isdigit() if value is not None else False
+
+    @staticmethod
+    def validate_boolean(value):
+        return value in [0, 1, "0", "1", True, False]
+
+    @staticmethod
     def validate_min(value, min_length):
         return len(value) >= min_length if value else False
+
+    @staticmethod
+    def validate_price(value):
+        try:
+            return float(value) >= 0  # Ensure the price is non-negative
+        except (ValueError, TypeError):
+            return False
+
+    @staticmethod
+    def validate_string(value):
+        return bool(re.match(r"^[A-Za-z\s]+$", value)) if value else False
 
     @staticmethod
     def validate_max(value, max_length):

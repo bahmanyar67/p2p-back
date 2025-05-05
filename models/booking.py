@@ -23,7 +23,7 @@ class Booking(db.Model):
             "id": self.id,
             "student_id": self.student_id,
             "tutor_id": self.tutor_id,
-            "student": self.student.name if self.student else None,
+            "student": self.student.to_dict() if self.student else None,
             # need full tutor object
             "tutor": self.tutor.to_dict() if self.tutor else None,
             "date": self.date.isoformat(),

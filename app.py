@@ -9,6 +9,7 @@ from routes.auth_routes import auth_bp
 from routes.general_routers import general_bp
 from routes.modules_router import modules_bp
 from routes.users_routes import users_bp
+from routes.messages_routes import messages_bp
 from routes.bookings_routes import bookings_bp
 
 
@@ -27,6 +28,8 @@ def create_app():
     app.register_blueprint(modules_bp)
     app.register_blueprint(users_bp)
     app.register_blueprint(messages_bp)
+
+    app.register_blueprint(bookings_bp)
 
     return app
 

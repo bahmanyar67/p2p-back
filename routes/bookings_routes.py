@@ -4,6 +4,9 @@ from models.user import User
 from models.booking import Booking
 from extensions import db
 from datetime import datetime
+import stripe
+
+stripe.api_key = "sk_test_51KxzhtKeIAw0kBJOO3XjfDEE8MXiLvC51NlEBZuBobJwqSuIqShtD5c3yj6DCPyr6PvRfYk2xhdTAlMzdrzDXJli003hccOBb8"
 
 bookings_bp = Blueprint('bookings', __name__)
 
@@ -56,6 +59,30 @@ def get_booking(booking_id):
     return jsonify({"success": True, "booking": booking.to_dict()}), 200
 
 
+@bookings_bp.route('/bookings/<int:booking_id>/create-payment-intent', methods=['POST'])
+@jwt_required()
+def create_payment_intent(booking_id):
+    booking = Booking.query.get(booking_id)
+
+    if not booking:
+        return jsonify({"success": False, "message": "Booking not found"}), 404
+
+    try:
+        intent = stripe.PaymentIntent.create(
+            amount=int(booking.total_price * 100),  # in cents
+            currency='gbp',
+            automatic_payment_methods={'enabled': True},
+            metadata={'booking_id': booking.id}
+        )
+
+        return jsonify({
+            'success': True,
+            'client_secret': intent.client_secret
+        }), 200
+
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
 @bookings_bp.route('/bookings/<int:booking_id>/confirm', methods=['PUT'])
 @jwt_required()
 def confirm_booking_status(booking_id):
@@ -70,6 +97,7 @@ def confirm_booking_status(booking_id):
     return jsonify({"success": True, "message": "Booking confirmed successfully", "booking": booking.to_dict()}), 200
 
 
+
 @bookings_bp.route('/bookings/<int:booking_id>/cancel', methods=['PUT'])
 @jwt_required()
 def cancel_booking_status(booking_id):
@@ -82,6 +110,7 @@ def cancel_booking_status(booking_id):
     db.session.commit()
 
     return jsonify({"success": True, "message": "Booking canceled successfully", "booking": booking.to_dict()}), 200
+
 
 @bookings_bp.route('/bookings', methods=['GET'])
 @jwt_required()

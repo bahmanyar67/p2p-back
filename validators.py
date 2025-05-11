@@ -13,6 +13,8 @@ class Validator:
         "string": "This {field} must contain only letters.",
         "number": "This {field} must be a number.",
         "boolean": "This {field} must be a boolean value.",
+        "price": "This {field} must be a non-negative number.",
+        "phone": "Invalid phone number format.",
     }
 
     @staticmethod
@@ -82,6 +84,10 @@ class Validator:
                 bool(re.search(r"\d", value)) and
                 bool(re.search(r"[!@#$%^&*(),.?\":{}|<>]", value))
         )
+
+    @staticmethod
+    def validate_phone(value):
+        return bool(re.match(r"^\+44\s?\d{9,10}$", value)) if value else False
 
     @staticmethod
     def add_error(field, message):

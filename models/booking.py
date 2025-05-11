@@ -15,6 +15,7 @@ class Booking(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    # Relationships
     student = db.relationship('User', foreign_keys=[student_id], backref='bookings_as_student')
     tutor = db.relationship('User', foreign_keys=[tutor_id], backref='bookings_as_tutor')
 

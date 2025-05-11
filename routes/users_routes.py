@@ -27,7 +27,7 @@ def update_user():
     if not Validator.validate("email", ["required", "email"], request_data):
         return jsonify({"success": False, "message": Validator.get_first_error('email')}), 422
 
-    if not Validator.validate("phone", ["required", "number"], request_data):
+    if not Validator.validate("phone", ["required", "phone"], request_data):
         return jsonify({"success": False, "message": Validator.get_first_error('phone')}), 422
 
     if not Validator.validate("subject", ["required", "string"], request_data):
